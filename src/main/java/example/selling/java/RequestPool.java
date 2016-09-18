@@ -1,52 +1,40 @@
 package example.selling.java;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.BlockingDeque;
 
 /**
  * author: code.babe
- * date: 2016-09-14 17:20
- * 以队列的形式来消费, 开放购物车功能, 支持抢购
+ * date: 2016-09-18 13:09
  */
-public class RequestPool<T> {
+public class RequestPool<T> extends AbsPool<T> {
 
-    // 超时时间, 单位ms
-    private static final int TIMEOUT = 500;
+    private boolean isLocked;
 
-    // 基本没有上线
-    BlockingQueue<T> requestPool = DB.singleton().db;
+    private T lockedNode;
 
-    private AtomicInteger size;
-
-    public int size() {
-        return requestPool.size() == size.get() ? size.get() : requestPool.size();
+    public RequestPool() {
+        super();
     }
 
-    public void put(T e) {
-        try {
-            requestPool.offer(e, TIMEOUT, TimeUnit.MILLISECONDS);
-            size.incrementAndGet();
-        } catch (InterruptedException e1) {
-        }
+    public RequestPool(BlockingDeque<T> requestPool) {
+        super(requestPool);
     }
 
-    public T pop() {
-        try {
-            requestPool.poll(TIMEOUT, TimeUnit.MILLISECONDS);
-            size.decrementAndGet();
-        } catch (InterruptedException e) {
-        }
+    @Override
+    public T lock() {
         return null;
     }
 
-    // get first element
-    public T get() {
-        return requestPool.element();
+    @Override
+    public boolean unlock(T ele) {
+        return false;
     }
 
-    public boolean isEmpty() {
-        return size() == 0;
+    public boolean isLocked() {
+        return isLocked;
     }
 
+    public T getLockedNode() {
+        return lockedNode;
+    }
 }

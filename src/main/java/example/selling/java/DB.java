@@ -10,6 +10,7 @@ import java.util.concurrent.LinkedBlockingDeque;
  */
 public final class DB {
 
+    // TODO: 16/9/18 确定最优的数据结构  
     private DB() {
         db = new LinkedBlockingDeque<>(MAX_CAPACITY);
     }
