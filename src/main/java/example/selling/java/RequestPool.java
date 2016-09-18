@@ -1,6 +1,7 @@
 package example.selling.java;
 
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * author: code.babe
@@ -11,6 +12,8 @@ public class RequestPool<T> extends AbsPool<T> {
     private boolean isLocked;
 
     private T lockedNode;
+
+    private AtomicInteger cachedSize;
 
     public RequestPool() {
         super();

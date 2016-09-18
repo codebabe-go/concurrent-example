@@ -1,9 +1,7 @@
 package example.selling.java;
 
 import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * author: code.babe
@@ -25,11 +23,19 @@ public abstract class AbsPool<T> implements Pool<T> {
 
     protected BlockingDeque<T> requestPool;
 
-    protected AtomicInteger size;
-
     @Override
     public int size() {
-        return requestPool.size() == size.get() ? size.get() : requestPool.size();
+        return requestPool.size();
+    }
+
+    @Override
+    public int actuallySize() {
+        return DB.currentSize();
+    }
+
+    @Override
+    public int cachedSize() {
+        return DB.currentCached();
     }
 
     @Override
@@ -39,6 +45,18 @@ public abstract class AbsPool<T> implements Pool<T> {
 
     @Override
     public T pop() {
+        DB.increase(-1, DB.Type.ACTUALLY);
+        return get();
+
+    }
+
+    @Override
+    public void push(T ele) {
+        put(ele);
+        DB.increase(1, DB.Type.ACTUALLY);
+    }
+
+    protected T get() {
         try {
             return requestPool.pollFirst(TIMEOUT, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
@@ -46,8 +64,7 @@ public abstract class AbsPool<T> implements Pool<T> {
         return null;
     }
 
-    @Override
-    public void push(T ele) {
+    protected void put(T ele) {
         try {
             requestPool.offerLast(ele, TIMEOUT, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {

@@ -1,5 +1,7 @@
 package scala.java
 
+import java.ScalaHelper
+
 /**
   * author: code.babe 
   * date: 2016-09-12 10:56

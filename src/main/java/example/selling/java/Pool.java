@@ -8,6 +8,8 @@ public interface Pool<T> {
 
     int size();
 
+    int actuallySize();
+
     boolean isEmpty();
 
     /**
@@ -15,6 +17,13 @@ public interface Pool<T> {
      * @return
      */
     T lock();
+
+    /**
+     * 被锁住的大小, 这是一个共享数据
+     * TODO 如何定义这个方法 有待商榷
+     * @return
+     */
+    int cachedSize();
 
     /**
      * 放回去, 或成功消费, 或消费失败
