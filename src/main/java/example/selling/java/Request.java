@@ -68,7 +68,8 @@ public class Request implements Runnable {
         return type;
     }
 
-    public void setType(int type) {
+    public Request setType(int type) {
         this.type = type;
+        return this;
     }
 }

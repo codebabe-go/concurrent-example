@@ -10,6 +10,12 @@ import example.selling.java.Response;
  */
 public class TicketAgent implements RequestPorxy {
 
+    private Cinema cinema;
+
+    public TicketAgent(Cinema cinema) {
+        this.cinema = cinema;
+    }
+
     public Response dispatchRequest(Request request) {
         if (null == request) {
             return Response.FAILED().wrapper("request is null");
@@ -21,10 +27,15 @@ public class TicketAgent implements RequestPorxy {
 
         Customer customer = (Customer) request;
         int type = customer.getType();
+
+        if (type > Request.EventType.PAY.getType()) {
+            return Response.FAILED().wrapper("The flow is over, you've already ticket an ticket");
+        }
+
         if (Request.EventType.EMPTY.getType() == type) {
-
+            // TODO: 16/9/19 空请求不做操作
         } else if (Request.EventType.LOCK.getType() == type) {
-
+            
         } else if (Request.EventType.PAY.getType() == type) {
 
         } else {

@@ -1,11 +1,6 @@
 package example.selling.java.impl;
 
-import example.selling.java.Pool;
-import example.selling.java.PrintOffice;
-import example.selling.java.AbsPool;
-import example.selling.java.Ticket;
-
-import java.util.List;
+import example.selling.java.*;
 
 /**
  * author: code.babe
@@ -21,16 +16,16 @@ public class Cinema implements PrintOffice {
     }
 
     public boolean isEnough() {
-        return pool.isEmpty();
+        // 实际的大小是否大于缓存(开始流程)中的大小即为是否有充足的票源
+        return pool.actuallySize() - pool.cachedSize() > 0;
     }
 
-    public List<Ticket> allocateTickets() {
-        return null;
+    public Ticket allocateTickets(Request request) {
+        return request instanceof Customer ? bind(request) : null;
     }
 
     // 完成打印后将这个ticket取出, 这样符合实际情况
-    public void printTicket() {
-        Ticket ticket = null;
+    public void printTicket(Ticket ticket) {
         if (ticket == null) {
             return;
         }
@@ -46,5 +41,16 @@ public class Cinema implements PrintOffice {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 绑定请求
+     * @param request
+     * @return
+     */
+    private Ticket bind(Request request) {
+        // 名字统一规定为发送请求的时候
+        Ticket ticket = new Ticket(request, request.getPostTime().toString());
+        return ticket;
     }
 }

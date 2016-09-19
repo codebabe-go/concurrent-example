@@ -1,21 +1,28 @@
 package example.selling.java;
 
+import java.sql.Timestamp;
+
 /**
  * author: code.babe
  * date: 2016-09-14 19:35
- * 一张票由一个线程来处理
  */
 public class Ticket {
 
-    private String id;
-    private String name;
-    private Thread sender;
+    public Ticket(Request sender, String name) {
+        this.id = new Timestamp(System.currentTimeMillis());
+        this.sender = sender;
+        this.name = name;
+    }
 
-    public String getId() {
+    private Timestamp id;
+    private String name;
+    private Request sender;
+
+    public Timestamp getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Timestamp id) {
         this.id = id;
     }
 
@@ -27,11 +34,11 @@ public class Ticket {
         this.name = name;
     }
 
-    public Thread getSender() {
+    public Request getSender() {
         return sender;
     }
 
-    public void setSender(Thread sender) {
+    public void setSender(Request sender) {
         this.sender = sender;
     }
 }

@@ -1,8 +1,5 @@
 package example.selling.java;
 
-
-import java.util.List;
-
 /**
  * author: code.babe
  * date: 2016-09-14 13:59
@@ -11,8 +8,13 @@ public interface PrintOffice {
 
     boolean isEnough();
 
-    List<Ticket> allocateTickets();
+    /**
+     * 为了简化模型, 这里规定一个人只能买一张票
+     * @param request
+     * @return
+     */
+    Ticket allocateTickets(Request request);
 
-    void printTicket();
+    void printTicket(Ticket ticket);
 
 }
