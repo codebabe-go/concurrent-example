@@ -15,6 +15,6 @@ public interface PrintOffice {
      */
     Ticket allocateTickets(Request request);
 
-    void printTicket(Ticket ticket);
+    Response printTicket(Ticket ticket);
 
 }

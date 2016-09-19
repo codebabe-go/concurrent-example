@@ -31,7 +31,14 @@ public class RequestPool<T> extends AbsPool<T> {
 
     @Override
     public boolean unlock(T ele) {
-        return false;
+        cachedSize.set(increase(-1, DB.Type.CACHED));
+        try {
+            put(ele);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     public int cacheSize() {

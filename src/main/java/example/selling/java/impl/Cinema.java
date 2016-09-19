@@ -21,23 +21,29 @@ public class Cinema implements PrintOffice {
     }
 
     public Ticket allocateTickets(Request request) {
-        return request instanceof Customer ? bind(request) : null;
+        Ticket src = (Ticket) pool.lock();
+        return request instanceof Customer ? bind(request, src) : null;
     }
 
     // 完成打印后将这个ticket取出, 这样符合实际情况
-    public void printTicket(Ticket ticket) {
+    public Response printTicket(Ticket ticket) {
         if (ticket == null) {
-            return;
+            Response.FAILED().wrapper("parameter is null");
         }
-        printing();
-        System.out.println(String.format("ticket name = %s is printed", ticket.getName()));
-
+        String name = ticket.getName();
+        printing(name);
+        if(!pool.unlock(ticket)) {
+            Response.FAILED().wrapper("unlock failed because of unknown error");
+        }
+        System.out.println(String.format("[printTicket]ticket name = %s is printed", name));
+        return Response.SUCCESS();
     }
 
-    private void printing() {
+    private void printing(String name) {
         try {
-            Thread.sleep(500);
             // TODO: 16/9/18 可以增加一些处理 这里做简单的线程阻塞
+            System.out.println(String.format("[printTicket]ticket is printing, name = %s", name));
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -45,12 +51,14 @@ public class Cinema implements PrintOffice {
 
     /**
      * 绑定请求
-     * @param request
+     * @param sender
      * @return
      */
-    private Ticket bind(Request request) {
-        // 名字统一规定为发送请求的时候
-        Ticket ticket = new Ticket(request, request.getPostTime().toString());
-        return ticket;
+    private Ticket bind(Request sender, Ticket src) {
+        if (src == null || sender == null) {
+            return null;
+        }
+        // 名字统一规定为请求发送的时间
+        return src.builder(sender.getClass().toString(), sender);
     }
 }

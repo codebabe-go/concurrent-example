@@ -8,10 +8,7 @@ import java.sql.Timestamp;
  */
 public class Ticket {
 
-    public Ticket(Request sender, String name) {
-        this.id = new Timestamp(System.currentTimeMillis());
-        this.sender = sender;
-        this.name = name;
+    public Ticket() {
     }
 
     private Timestamp id;
@@ -40,5 +37,12 @@ public class Ticket {
 
     public void setSender(Request sender) {
         this.sender = sender;
+    }
+
+    public Ticket builder(String name, Request sender) {
+        this.id = new Timestamp(System.currentTimeMillis());
+        this.name = name;
+        this.sender = sender;
+        return this;
     }
 }

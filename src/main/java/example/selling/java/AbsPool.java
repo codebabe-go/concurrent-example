@@ -52,8 +52,12 @@ public abstract class AbsPool<T> implements Pool<T> {
 
     @Override
     public void push(T ele) {
-        put(ele);
-        increase(1, DB.Type.ACTUALLY);
+        try {
+            put(ele);
+            increase(1, DB.Type.ACTUALLY);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -69,10 +73,7 @@ public abstract class AbsPool<T> implements Pool<T> {
         return null;
     }
 
-    protected void put(T ele) {
-        try {
-            requestPool.offerLast(ele, TIMEOUT, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-        }
+    protected void put(T ele) throws InterruptedException {
+        requestPool.offerLast(ele, TIMEOUT, TimeUnit.MILLISECONDS);
     }
 }
