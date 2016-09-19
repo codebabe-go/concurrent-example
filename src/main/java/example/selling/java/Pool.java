@@ -36,4 +36,6 @@ public interface Pool<T> {
 
     void push(T ele);
 
+    int increase(int count, int type);
+
 }

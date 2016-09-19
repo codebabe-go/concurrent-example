@@ -16,7 +16,7 @@ public final class DB {
         db = new LinkedBlockingDeque<>(MAX_CAPACITY);
     }
 
-    interface Type {
+    public interface Type {
         int ACTUALLY = 0;
         int CACHED = 1;
     }

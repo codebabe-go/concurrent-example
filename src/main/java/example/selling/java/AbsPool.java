@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * author: code.babe
  * date: 2016-09-14 17:20
- * 使用双向队列来, 统一规定为左进右出
+ * 使用双向队列来, 统一规定为左进右出, 同时对DB中的一些方法进行组合封装
  */
 public abstract class AbsPool<T> implements Pool<T> {
 
@@ -21,7 +21,7 @@ public abstract class AbsPool<T> implements Pool<T> {
     // 超时时间, 单位ms
     private static final int TIMEOUT = 500;
 
-    protected BlockingDeque<T> requestPool;
+    private BlockingDeque<T> requestPool;
 
     @Override
     public int size() {
@@ -45,7 +45,7 @@ public abstract class AbsPool<T> implements Pool<T> {
 
     @Override
     public T pop() {
-        DB.increase(-1, DB.Type.ACTUALLY);
+        increase(-1, DB.Type.ACTUALLY);
         return get();
 
     }
@@ -53,7 +53,12 @@ public abstract class AbsPool<T> implements Pool<T> {
     @Override
     public void push(T ele) {
         put(ele);
-        DB.increase(1, DB.Type.ACTUALLY);
+        increase(1, DB.Type.ACTUALLY);
+    }
+
+    @Override
+    public int increase(int count, int type) {
+        return DB.increase(count, type);
     }
 
     protected T get() {

@@ -1,4 +1,7 @@
-package example.selling.java;
+package example.selling.java.impl;
+
+import example.selling.java.AbsPool;
+import example.selling.java.DB;
 
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -8,10 +11,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * date: 2016-09-18 13:09
  */
 public class RequestPool<T> extends AbsPool<T> {
-
-    private boolean isLocked;
-
-    private T lockedNode;
 
     private AtomicInteger cachedSize;
 
@@ -25,7 +24,9 @@ public class RequestPool<T> extends AbsPool<T> {
 
     @Override
     public T lock() {
-        return null;
+        cachedSize.set(increase(1, DB.Type.CACHED));
+        T ele = get();
+        return ele;
     }
 
     @Override
@@ -33,11 +34,8 @@ public class RequestPool<T> extends AbsPool<T> {
         return false;
     }
 
-    public boolean isLocked() {
-        return isLocked;
+    public int cacheSize() {
+        return cachedSize.intValue();
     }
 
-    public T getLockedNode() {
-        return lockedNode;
-    }
 }
