@@ -18,7 +18,7 @@ public class Response {
     private int code;
     private Object data;
 
-    public Response warpper(Object data) {
+    public Response wrapper(Object data) {
         this.data = data;
         return this;
     }
@@ -32,4 +32,7 @@ public class Response {
         return new Response(ReturnCode.FAILED);
     }
 
+    public int getCode() {
+        return code;
+    }
 }

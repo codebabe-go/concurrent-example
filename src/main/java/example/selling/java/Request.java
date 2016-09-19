@@ -8,18 +8,44 @@ import java.sql.Timestamp;
  */
 public class Request implements Runnable {
 
-    public Request(Timestamp postTime, int type) {
-        this.postTime = postTime;
+    public Request(int type) {
+        this.postTime = new Timestamp(System.currentTimeMillis());
         this.type = type;
     }
 
-    public interface EnventType {
-        // 空请求
-        int EMPTY = -1;
+    public enum EventType {
+        // 空请求 测试用
+        EMPTY(-1, "EMPTY"),
         // 锁定
-        int LOCK = 0;
+        LOCK(0, "LOCK"),
         // 支付
-        int PAY = 1;
+        PAY(1, "PAY")
+        ;
+
+        private String name;
+        private int type;
+
+        EventType(int type, String name) {
+            this.type = type;
+            this.name = name;
+        }
+
+        public static String name(int type) {
+            for (EventType e : EventType.values()) {
+                if (type == e.getType()) {
+                    return e.getName();
+                }
+            }
+            return "";
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getType() {
+            return type;
+        }
     }
 
     private Timestamp postTime;
@@ -27,7 +53,7 @@ public class Request implements Runnable {
     private int type;
 
     public void run() {
-        System.out.println(String.format("I was posted in %s", postTime));
+        System.out.println(String.format("I was posted in %s, my type is %s", postTime, EventType.name(type)));
     }
 
     public Timestamp getPostTime() {

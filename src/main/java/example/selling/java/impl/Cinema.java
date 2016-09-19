@@ -34,10 +34,15 @@ public class Cinema implements PrintOffice {
         if (ticket == null) {
             return;
         }
+        printing();
         System.out.println(String.format("ticket name = %s is printed", ticket.getName()));
+
+    }
+
+    private void printing() {
         try {
             Thread.sleep(500);
-            // TODO: 16/9/18
+            // TODO: 16/9/18 可以增加一些处理 这里做简单的线程阻塞
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
