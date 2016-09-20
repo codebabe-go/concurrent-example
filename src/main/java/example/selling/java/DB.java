@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public final class DB {
 
-    // TODO: 16/9/18 确定最优的数据结构  
+    // TODO: 16/9/18 确定最优的数据结构
     private DB() {
         db = new LinkedBlockingDeque<>(MAX_CAPACITY);
         initDB(1000);
@@ -84,7 +84,9 @@ public final class DB {
             // 错误操作返回-1
             return -1;
         } finally {
-            lock.unlock();
+            if (lock.hasQueuedThreads()) {
+                lock.unlock();
+            }
         }
     }
 
@@ -94,7 +96,9 @@ public final class DB {
         try {
             return actuallySize;
         } finally {
-            lock.unlock();
+            if (lock.hasQueuedThreads()) {
+                lock.unlock();
+            }
         }
     }
 
@@ -103,7 +107,10 @@ public final class DB {
         try {
             return cachedSize;
         } finally {
-            lock.unlock();
+            // TODO: 16/9/20 可能存在问题  
+            if (lock.hasQueuedThreads()) {
+                lock.unlock();
+            }
         }
     }
 }

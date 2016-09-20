@@ -34,7 +34,7 @@ public class Main {
 
     @Before
     public void before() {
-        size = 1;
+        size = 1000;
         requestPool = TaskManager.getService();
         solvePool = TaskManager.getService();
         customers = new ArrayList<>();
