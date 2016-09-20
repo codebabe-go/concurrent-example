@@ -30,12 +30,12 @@ public class Cinema implements PrintOffice {
     // 完成打印后将这个ticket取出, 这样符合实际情况
     public Response printTicket(Ticket ticket) {
         if (ticket == null) {
-            Response.FAILED().wrapper("parameter is null");
+            return Response.FAILED().wrapper("parameter is null");
         }
         String name = ticket.getName();
         printing(name);
         if(!pool.unlock(ticket)) {
-            Response.FAILED().wrapper("unlock failed because of unknown error");
+            return Response.FAILED().wrapper("unlock failed because of unknown error");
         }
         System.out.println(String.format("[printTicket]ticket name = %s is printed", name));
         return Response.SUCCESS();

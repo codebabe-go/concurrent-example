@@ -19,7 +19,8 @@ public class Request implements Runnable {
         // 锁定
         LOCK(0, "LOCK"),
         // 支付
-        PAY(1, "PAY")
+        PAY(1, "PAY"),
+        COMPLETED(2, "COMPLETED")
         ;
 
         private String name;

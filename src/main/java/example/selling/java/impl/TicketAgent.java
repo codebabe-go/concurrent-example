@@ -34,6 +34,7 @@ public class TicketAgent implements RequestPorxy {
         }
 
         // 每次都是完整的从客户发来的请求, 所以不赞成在agent端模拟长连接
+        // 模拟三次握手
         Ticket ticket = null;
         if (Request.EventType.EMPTY.getType() == type) {
             // 判断是否还有票源
@@ -55,8 +56,14 @@ public class TicketAgent implements RequestPorxy {
             return Response.FAILED().wrapper("no match type");
         }
 
-        return Response.SUCCESS();
+        // 返回type判断是否结束
+        return Response.SUCCESS().wrapper(type);
     }
 
-
+    @Override
+    public String toString() {
+        return "TicketAgent{" +
+                "cinema=" + cinema +
+                '}';
+    }
 }

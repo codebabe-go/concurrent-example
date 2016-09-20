@@ -27,9 +27,14 @@ public class Main {
     // 线程数量自己规划 可以慢慢加大
     private int size;
 
+    // 设置成五分钟进行调试
+    private final static long DEBUG_TIME = 1000 * 60 * 5;
+    // 常规的睡眠时间
+    private final static long SLEEP_TIME = 1000 * 30;
+
     @Before
     public void before() {
-        size = 10;
+        size = 1;
         requestPool = TaskManager.getService();
         solvePool = TaskManager.getService();
         customers = new ArrayList<>();
@@ -48,6 +53,6 @@ public class Main {
         }
 
         // 主线程sleep半分钟, 保证主线程不会马上终止
-        ThreadUtil.sleep(10000);
+        ThreadUtil.sleep(DEBUG_TIME);
     }
 }
