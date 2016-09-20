@@ -14,6 +14,8 @@ public class Customer extends Request {
 
     private long id;
     private TicketAgent agent;
+    // 设置关联, 在"长连接中"防止失效
+    private Ticket ticket;
 
     // 在这个例子中将会调用这个构造方法, 全局只有一个requestPool
     public Customer(long id, int type, RequestPool<Ticket> requestPool) {
@@ -39,23 +41,45 @@ public class Customer extends Request {
     public void run() {
         if (EventType.EMPTY.getType() == getType()) {
             int type = getType();
+            System.out.println(String.format("[Customer.run()] info - customer id = %d is requesting now", id));
             while (true) { // 构建一个死循环来模拟一个长连接
-                System.out.println(String.format("[Customer.run()]info - customer id = %d is requesting now", id));
                 System.out.println(String.format("request type = %s, id = %d", Request.EventType.name(type), id));
-                Response response = agent.dispatchRequest(this.setType(type++));
+                Response response = agent.dispatchRequest(setType(type++));
                 if (response == null || Response.ReturnCode.SUCCESS != response.getCode()) {
-                    System.out.println(String.format("[Customer.run()]error - id = %d", id));
+                    System.out.println(String.format("[Customer.run()] error - id = %d, error message = %s", id, response.getData()));
                     return;
                 }
+
+                if (response != null && Response.ReturnCode.SUCCESS == response.getCode() && response.getData() instanceof Ticket) {
+                    setTicket((Ticket) response.getData());
+                }
+
                 // 结束完整的一次请求
-                if (response != null && Response.ReturnCode.SUCCESS == response.getCode() && EventType.COMPLETED.getType() == (int)response.getData()) {
-                    System.out.println(String.format("[Customer.run()]info - solve success"));
+                // 期间返回的data类型不一样 所以这里处理起来比较复杂
+                if (response != null && Response.ReturnCode.SUCCESS == response.getCode() && response.getData() == null) {
+                    System.out.println(String.format("[Customer.run()] info - solve success, completed customer id = %d", id));
                     return;
                 }
             }
         } else {
             return;
         }
+    }
+
+    public Ticket getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(Ticket ticket) {
+        this.ticket = ticket;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     @Override

@@ -29,8 +29,8 @@ public class TicketAgent implements RequestPorxy {
         Customer customer = (Customer) request;
         int type = customer.getType();
 
-        if (type > Request.EventType.PAY.getType()) {
-            return Response.FAILED().wrapper("The flow is over, you've already ticket an ticket");
+        if (type > Request.EventType.COMPLETED.getType()) {
+            return Response.FAILED().wrapper(String.format("The flow is over, you've already ticket an ticket, id = %d", customer.getId()));
         }
 
         // 每次都是完整的从客户发来的请求, 所以不赞成在agent端模拟长连接
@@ -46,12 +46,15 @@ public class TicketAgent implements RequestPorxy {
             if (null == ticket) {
                 return Response.FAILED().wrapper(String.format("cannot get this ticket, interrupt the long connection, post time = %s", request.getPostTime().toString()));
             }
+            return Response.SUCCESS().wrapper(ticket);
         } else if (Request.EventType.PAY.getType() == type) {
-            Response response = cinema.printTicket(ticket);
+            Response response = cinema.printTicket(customer.getTicket());
             // 通常不会失败, 这里只是完整逻辑闭环
             if (Response.ReturnCode.FAILED == response.getCode()) {
                 return Response.FAILED().wrapper("pay failed");
             }
+        } else if (Request.EventType.COMPLETED.getType() == type) {
+            return Response.SUCCESS();
         } else {
             return Response.FAILED().wrapper("no match type");
         }

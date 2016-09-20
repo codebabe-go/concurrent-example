@@ -53,6 +53,6 @@ public class Main {
         }
 
         // 主线程sleep半分钟, 保证主线程不会马上终止
-        ThreadUtil.sleep(DEBUG_TIME);
+        ThreadUtil.sleep(SLEEP_TIME);
     }
 }
