@@ -23,15 +23,18 @@ public class Main {
     private ExecutorService solvePool;
     private List<Customer> customers;
     private RequestPool<Ticket> pool;
+    // 线程数量自己规划 可以慢慢加大
+    private int size;
 
     @Before
     public void before() {
+        size = 1;
         requestPool = TaskManager.getService();
         solvePool = TaskManager.getService();
         customers = new ArrayList<>();
         pool = new RequestPool<>();
         // 生成10,000个请求, 模拟高并发情况
-        for (int i = 0; i <= 10000; i++) {
+        for (int i = 0; i < size; i++) {
             customers.add(new Customer(i, Request.EventType.EMPTY.getType(), pool));
         }
     }
@@ -40,7 +43,7 @@ public class Main {
     public void test() {
         // 直接多线程开始执行
         for (Customer customer : customers) {
-            requestPool.execute(new Thread(customer));
+            requestPool.execute(customer);
         }
     }
 

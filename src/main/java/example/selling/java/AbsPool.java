@@ -57,6 +57,7 @@ public abstract class AbsPool<T> implements Pool<T> {
             increase(1, DB.Type.ACTUALLY);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            System.out.println(String.format("[AbsPool]error"));
         }
     }
 
@@ -69,6 +70,8 @@ public abstract class AbsPool<T> implements Pool<T> {
         try {
             return requestPool.pollFirst(TIMEOUT, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
+            e.printStackTrace();
+            System.out.println(String.format("[AbsPool]error - get element timeout"));
         }
         return null;
     }

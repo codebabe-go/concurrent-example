@@ -39,13 +39,17 @@ public class Customer extends Request {
     public void run() {
         if (EventType.EMPTY.getType() == getType()) {
             while (true) { // 构建一个死循环来模拟一个长连接
-                System.out.println(String.format("[Customer.run()]info - customer id = %d is requesting now"));
+                System.out.println(String.format("[Customer.run()]info - customer id = %d is requesting now", id));
                 Response response = agent.dispatchRequest(this.setType(getType() + 1));
                 if (response == null || Response.ReturnCode.SUCCESS != response.getCode()) {
                     System.out.println(String.format("[Customer.run()]error - %s", (String) response.getData()));
                     return;
                 }
-                System.out.println(String.format("[Customer.run()]info - %s", (String) response.getData()));
+                // 结束完整的一次请求
+                if (response != null && Response.ReturnCode.SUCCESS == response.getCode() && response.getData() == null) {
+                    System.out.println(String.format("[Customer.run()]info - solve success"));
+                    return;
+                }
             }
         } else {
             return;

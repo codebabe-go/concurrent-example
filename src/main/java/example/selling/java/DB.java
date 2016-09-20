@@ -14,6 +14,7 @@ public final class DB {
     // TODO: 16/9/18 确定最优的数据结构  
     private DB() {
         db = new LinkedBlockingDeque<>(MAX_CAPACITY);
+        initDB(1);
     }
 
     public interface Type {
@@ -36,6 +37,21 @@ public final class DB {
     BlockingDeque db;
 
     private static DB INSTANCE = null;
+
+    /**
+     * TODO 16/9/20 这里设计的有问题 不应该是在内部处理的 以后可以稍作改动
+     * 初始化 这个是内部方法自己做处理
+     * @param number 票的数目
+     */
+    private final void initDB(long number) {
+        for (int i = 0; i < number; i++) {
+            try {
+                db.putLast(new Ticket());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public static DB singleton() {
         if (null == INSTANCE) {

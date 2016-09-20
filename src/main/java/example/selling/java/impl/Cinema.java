@@ -61,4 +61,11 @@ public class Cinema implements PrintOffice {
         // 名字统一规定为请求发送的时间
         return src.builder(sender.getClass().toString(), sender);
     }
+
+    @Override
+    public String toString() {
+        return "Cinema{" +
+                "pool=" + pool +
+                '}';
+    }
 }

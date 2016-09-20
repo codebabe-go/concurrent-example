@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class RequestPool<T> extends AbsPool<T> {
 
-    private AtomicInteger cachedSize;
+    private AtomicInteger cachedSize = new AtomicInteger(0);
 
     public RequestPool() {
         super();

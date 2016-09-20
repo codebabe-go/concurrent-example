@@ -55,6 +55,8 @@ public class TicketAgent implements RequestPorxy {
             return Response.FAILED().wrapper("no match type");
         }
 
-        return Response.SUCCESS().wrapper(String.format("solve success %s", request.toString()));
+        return Response.SUCCESS();
     }
+
+
 }
