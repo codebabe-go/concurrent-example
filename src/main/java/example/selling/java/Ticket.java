@@ -45,4 +45,13 @@ public class Ticket {
         this.sender = sender;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", sender=" + sender +
+                '}';
+    }
 }

@@ -1,6 +1,7 @@
 package example.selling.java.impl;
 
 import example.selling.java.*;
+import example.selling.java.util.ThreadUtil;
 
 /**
  * author: code.babe
@@ -17,6 +18,7 @@ public class Cinema implements PrintOffice {
 
     public boolean isEnough() {
         // 实际的大小是否大于缓存(开始流程)中的大小即为是否有充足的票源
+        System.out.println(String.format("[Cinema.isEnough] actually size = %d, cached size = %d", pool.actuallySize(), pool.cachedSize()));
         return pool.actuallySize() - pool.cachedSize() > 0;
     }
 
@@ -40,13 +42,9 @@ public class Cinema implements PrintOffice {
     }
 
     private void printing(String name) {
-        try {
-            // TODO: 16/9/18 可以增加一些处理 这里做简单的线程阻塞
-            System.out.println(String.format("[printTicket]ticket is printing, name = %s", name));
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // TODO: 16/9/18 可以增加一些处理 这里做简单的线程阻塞
+        System.out.println(String.format("[printTicket]ticket is printing, name = %s", name));
+        ThreadUtil.sleep(500);
     }
 
     /**
@@ -59,7 +57,9 @@ public class Cinema implements PrintOffice {
             return null;
         }
         // 名字统一规定为请求发送的时间
-        return src.builder(sender.getClass().toString(), sender);
+        src = src.builder(sender.getPostTime().toString(), sender);
+        System.out.println(String.format("binding, ticket = %s", src.toString()));
+        return src;
     }
 
     @Override

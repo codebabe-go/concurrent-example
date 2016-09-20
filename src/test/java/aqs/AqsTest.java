@@ -47,7 +47,8 @@ public class AqsTest {
 
     @Test
     public void testDeque() {
-        BlockingDeque blockingDeque = new LinkedBlockingDeque<>();
-        Assert.assertTrue(blockingDeque.size() == 0);
+        BlockingDeque<String> blockingDeque = new LinkedBlockingDeque<>();
+        blockingDeque.offerLast("hello");
+        Assert.assertTrue(blockingDeque.poll().equals("hello"));
     }
 }

@@ -18,8 +18,8 @@ public abstract class AbsPool<T> implements Pool<T> {
         this.requestPool = requestPool;
     }
 
-    // 超时时间, 单位ms
-    private static final int TIMEOUT = 500;
+    // 超时时间, 单位ms, 应该保证超时时间比打印时间要久
+    private static final int TIMEOUT = 1000;
 
     private BlockingDeque<T> requestPool;
 
@@ -47,7 +47,6 @@ public abstract class AbsPool<T> implements Pool<T> {
     public T pop() {
         increase(-1, DB.Type.ACTUALLY);
         return get();
-
     }
 
     @Override

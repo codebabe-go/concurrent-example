@@ -40,9 +40,11 @@ public class Customer extends Request {
         if (EventType.EMPTY.getType() == getType()) {
             while (true) { // 构建一个死循环来模拟一个长连接
                 System.out.println(String.format("[Customer.run()]info - customer id = %d is requesting now", id));
-                Response response = agent.dispatchRequest(this.setType(getType() + 1));
+                int type = getType();
+                System.out.println(String.format("request type = %s, id = %d", Request.EventType.name(type), id));
+                Response response = agent.dispatchRequest(this.setType(type++));
                 if (response == null || Response.ReturnCode.SUCCESS != response.getCode()) {
-                    System.out.println(String.format("[Customer.run()]error - %s", (String) response.getData()));
+                    System.out.println(String.format("[Customer.run()]error - id = %d", id));
                     return;
                 }
                 // 结束完整的一次请求

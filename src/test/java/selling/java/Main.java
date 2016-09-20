@@ -5,6 +5,7 @@ import example.selling.java.Ticket;
 import example.selling.java.impl.Customer;
 import example.selling.java.impl.RequestPool;
 import example.selling.java.util.TaskManager;
+import example.selling.java.util.ThreadUtil;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,7 +29,7 @@ public class Main {
 
     @Before
     public void before() {
-        size = 1;
+        size = 10;
         requestPool = TaskManager.getService();
         solvePool = TaskManager.getService();
         customers = new ArrayList<>();
@@ -45,14 +46,8 @@ public class Main {
         for (Customer customer : customers) {
             requestPool.execute(customer);
         }
-    }
 
-    private void sleep(long mills) {
-        try {
-            Thread.sleep(mills);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // 主线程sleep半分钟, 保证主线程不会马上终止
+        ThreadUtil.sleep(10000);
     }
-
 }

@@ -14,7 +14,7 @@ public final class DB {
     // TODO: 16/9/18 确定最优的数据结构  
     private DB() {
         db = new LinkedBlockingDeque<>(MAX_CAPACITY);
-        initDB(1);
+        initDB(1000);
     }
 
     public interface Type {
@@ -43,7 +43,8 @@ public final class DB {
      * 初始化 这个是内部方法自己做处理
      * @param number 票的数目
      */
-    private final void initDB(long number) {
+    private final void initDB(int number) {
+        System.out.println(String.format("[DB.initDB] info - init db size = %d", number));
         for (int i = 0; i < number; i++) {
             try {
                 db.putLast(new Ticket());
@@ -51,6 +52,7 @@ public final class DB {
                 e.printStackTrace();
             }
         }
+        actuallySize = number;
     }
 
     public static DB singleton() {
