@@ -7,16 +7,18 @@ import example.selling.java.Ticket;
 /**
  * author: code.babe
  * date: 2016-09-17 13:45
- * 初始化的任务一般放在这个类进行
+ * 初始化的任务一般放在这个类进行, 为runnable的子类, 目的是为了主动按顺序发起请求
  * TODO 这样可能会让这个类显得比较重
  */
 public class Customer extends Request {
 
+    private long id;
     private TicketAgent agent;
 
     // 在这个例子中将会调用这个构造方法, 全局只有一个requestPool
-    public Customer(int type, RequestPool<Ticket> requestPool) {
+    public Customer(long id, int type, RequestPool<Ticket> requestPool) {
         super(type);
+        this.id = id;
         this.agent = new TicketAgent(new Cinema(requestPool));
     }
 
@@ -37,13 +39,24 @@ public class Customer extends Request {
     public void run() {
         if (EventType.EMPTY.getType() == getType()) {
             while (true) { // 构建一个死循环来模拟一个长连接
+                System.out.println(String.format("[Customer.run()]info - customer id = %d is requesting now"));
                 Response response = agent.dispatchRequest(this.setType(getType() + 1));
                 if (response == null || Response.ReturnCode.SUCCESS != response.getCode()) {
+                    System.out.println(String.format("[Customer.run()]error - %s", (String) response.getData()));
                     return;
                 }
+                System.out.println(String.format("[Customer.run()]info - %s", (String) response.getData()));
             }
         } else {
             return;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", agent=" + agent +
+                "} " + super.toString();
     }
 }

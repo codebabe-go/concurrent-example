@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutorService;
 /**
  * author: code.babe
  * date: 2016-09-19 15:08
+ * java该模块的测试用例
  */
 public class Main {
 
@@ -31,12 +32,13 @@ public class Main {
         pool = new RequestPool<>();
         // 生成10,000个请求, 模拟高并发情况
         for (int i = 0; i <= 10000; i++) {
-            customers.add(new Customer(Request.EventType.EMPTY.getType(), pool));
+            customers.add(new Customer(i, Request.EventType.EMPTY.getType(), pool));
         }
     }
 
     @Test
     public void test() {
+        // 直接多线程开始执行
         for (Customer customer : customers) {
             requestPool.execute(new Thread(customer));
         }

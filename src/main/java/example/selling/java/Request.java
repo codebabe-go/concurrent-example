@@ -52,6 +52,7 @@ public class Request implements Runnable {
 
     private int type;
 
+    @Override
     public void run() {
         System.out.println(String.format("I was posted in %s, my type is %s", postTime, EventType.name(type)));
     }
@@ -71,5 +72,13 @@ public class Request implements Runnable {
     public Request setType(int type) {
         this.type = type;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "postTime=" + postTime +
+                ", type=" + type +
+                '}';
     }
 }

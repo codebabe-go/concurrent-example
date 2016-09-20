@@ -35,4 +35,8 @@ public class Response {
     public int getCode() {
         return code;
     }
+
+    public Object getData() {
+        return data;
+    }
 }
