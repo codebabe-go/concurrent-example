@@ -1,7 +1,9 @@
 package selling.java;
 
 import example.selling.java.Request;
+import example.selling.java.Ticket;
 import example.selling.java.impl.Customer;
+import example.selling.java.impl.RequestPool;
 import example.selling.java.util.TaskManager;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,15 +21,17 @@ public class Main {
     private ExecutorService requestPool;
     private ExecutorService solvePool;
     private List<Customer> customers;
+    private RequestPool<Ticket> pool;
 
     @Before
     public void before() {
         requestPool = TaskManager.getService();
         solvePool = TaskManager.getService();
         customers = new ArrayList<>();
+        pool = new RequestPool<>();
         // 生成10,000个请求, 模拟高并发情况
         for (int i = 0; i <= 10000; i++) {
-            customers.add(new Customer(Request.EventType.EMPTY.getType()));
+            customers.add(new Customer(Request.EventType.EMPTY.getType(), pool));
         }
     }
 

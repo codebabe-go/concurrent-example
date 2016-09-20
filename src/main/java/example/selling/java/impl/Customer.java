@@ -2,21 +2,34 @@ package example.selling.java.impl;
 
 import example.selling.java.Request;
 import example.selling.java.Response;
+import example.selling.java.Ticket;
 
 /**
  * author: code.babe
  * date: 2016-09-17 13:45
+ * 初始化的任务一般放在这个类进行
+ * TODO 这样可能会让这个类显得比较重
  */
 public class Customer extends Request {
 
     private TicketAgent agent;
 
-    public Customer(int type) {
+    // 在这个例子中将会调用这个构造方法, 全局只有一个requestPool
+    public Customer(int type, RequestPool<Ticket> requestPool) {
         super(type);
+        this.agent = new TicketAgent(new Cinema(requestPool));
+    }
+
+    // 这里最好指定一个电影院, 不可能让customer : ticketAgent : cinema = 1 : 1 : 1
+    public Customer(int type, Cinema cinema) {
+        super(type);
+        // TODO: 16/9/19 这里需要初始化agent, 需要注意的是agent的构造函数中还包含需要初始化的cinema
+        // 为了逻辑简单, 每个售票员只服务一个顾客
+        this.agent = new TicketAgent(cinema);
     }
 
     public Customer(int type, TicketAgent agent) {
-        this(type);
+        super(type);
         this.agent = agent;
     }
 
